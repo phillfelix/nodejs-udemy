@@ -1,9 +1,12 @@
 
+const config = require('config');
 const fs = require('fs');
 const path = require('path');
 const morgan = require('morgan');
 
-function logger(env) {
+function logger() {
+  const env = config.util.getEnv('NODE_ENV');
+
   let logger;
   if(env === 'development') {
     logger = morgan('tiny')
