@@ -10,6 +10,9 @@ const app = express();
 debug(`Application: ${config.get('name')}`);
 debug(`Mail host: ${config.get('mail.host')}`);
 
+app.set('view engine', 'pug');
+app.set('views', './views'); // default
+
 // third party middlewares
 app.use(helmet());
 
@@ -21,6 +24,10 @@ app.use(express.static('public'));
 // custom middlewares
 app.use(logger());
 app.use(auth);
+
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Home of Vidly', message: 'Wellcome to Vidly' });
+});
 
 // custom router
 app.use(genres);
