@@ -1,13 +1,14 @@
 const config = require('config');
 const express = require('express');
 const helmet = require('helmet');
+const debug = require('debug')('app:startup');
 const genres = require('./genres');
 const auth = require('./auth');
 const logger = require('./logger');
 const app = express();
 
-console.log(config.get('name'));
-console.log(config.get('mail.host'));
+debug(`Application: ${config.get('name')}`);
+debug(`Mail host: ${config.get('mail.host')}`);
 
 // third party middlewares
 app.use(helmet());
@@ -25,4 +26,4 @@ app.use(auth);
 app.use(genres);
 
 const port = config.get('port'); // get port from environment
-app.listen(port, () => console.log(`Vidly API listening on port ${port}`));
+app.listen(port, () => debug(`'${config.get('name')}' listening on port ${port}`));

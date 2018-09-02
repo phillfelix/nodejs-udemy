@@ -1,5 +1,5 @@
 {
-  "name": "Vidly - Production",
+  "name": "Vidly API - Production",
   "mail": {
     "host": "production-host-mail"
   }
