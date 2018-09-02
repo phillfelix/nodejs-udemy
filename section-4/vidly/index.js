@@ -2,9 +2,10 @@ const config = require('config');
 const express = require('express');
 const helmet = require('helmet');
 const debug = require('debug')('app:startup');
-const genres = require('./genres');
-const auth = require('./auth');
-const logger = require('./logger');
+const genres = require('./routes/genres');
+const home = require('./routes/home');
+const auth = require('./middleware/auth');
+const logger = require('./middleware/logger');
 const app = express();
 
 debug(`Application: ${config.get('name')}`);
@@ -25,12 +26,9 @@ app.use(express.static('public'));
 app.use(logger());
 app.use(auth);
 
-app.get('/', (req, res) => {
-  res.render('index', { title: 'Home of Vidly', message: 'Wellcome to Vidly' });
-});
-
 // custom router
-app.use(genres);
+app.use('/', home);
+app.use('/api/genres', genres);
 
 const port = config.get('port'); // get port from environment
 app.listen(port, () => debug(`'${config.get('name')}' listening on port ${port}`));
