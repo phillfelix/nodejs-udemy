@@ -1,5 +1,6 @@
 console.log('Before');
 getUser(1, getUserRepos);
+console.log('After');
 
 function getUserRepos(user) {
   getRepositories(user.username, getRepoCommits);
