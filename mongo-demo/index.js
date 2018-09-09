@@ -15,9 +15,9 @@ const Course = mongoose.model('Course', courseSchema);
 
 async function createCourse() {
   const course = new Course({
-    name: 'Node.js course',
+    name: 'React course',
     author: 'Mosh',
-    tags: ['nodejs', 'backend'],
+    tags: ['react', 'backend'],
     isPublished: true
   });
 
@@ -25,5 +25,15 @@ async function createCourse() {
   console.log(result);
 }
 
-createCourse();
+async function getCourses() {
+  const courses = await Course
+    .find({ author: 'Mosh', isPublished: true }) // match da query
+    .limit(10) // limite de resultados
+    .sort({ name: 1 }) // ordena por ordem crescente de nome
+    .select({ name: 1, tags: 1 }); // seleciona apenas os atributos especificos
+
+  console.log(courses);
+}
+
+getCourses();
 
