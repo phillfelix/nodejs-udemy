@@ -21,5 +21,9 @@ const p2 = new Promise(resolve => {
 });
 
 Promise.all([p1, p2])
-  .then(results => console.log(results));
+  .then(results => console.log('all', results))
+  .catch(err => console.log(err));
+
+Promise.race([p1, p2])
+  .then(result => console.log('race', result));
 
