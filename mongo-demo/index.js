@@ -5,12 +5,39 @@ mongoose.connect('mongodb://localhost/mongo-exercises', { useNewUrlParser: true 
   .catch(err => console.log('Could not connect to database:', err));
 
 const courseSchema = mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 255,
+    // match: /pattern/
+  },
+  categories: {
+    type: String,
+    required: true,
+    enum: ['web', 'backend', 'frontend'],
+    lowercase: true
+  },
   author: String,
-  tags: [ String ],
+  tags: {
+    type: Array,
+    validate: {
+      validator: function(v) {
+        return v && v.length > 0
+      },
+      message: 'A course should have at least one tag.'
+    }
+  },
   date: { type: Date, default: Date.now },
   isPublished: Boolean,
-  price: Number
+  price: {
+    type: Number,
+    required: function() { return this.isPublished; },
+    min: 10,
+    max: 200,
+    get: v => Math.round(v),
+    set: v => Math.round(v)
+  }
 });
 
 const Course = mongoose.model('Course', courseSchema);
@@ -18,9 +45,10 @@ const Course = mongoose.model('Course', courseSchema);
 // create
 async function createCourse() {
   const course = new Course({
-    name: 'React course',
+    // name: 'React course',
     author: 'Mosh',
-    tags: ['react', 'backend'],
+    categories: 'ué',
+    // tags: ['react', 'backend'],
     isPublished: true
   });
 
@@ -29,9 +57,10 @@ async function createCourse() {
 }
 
 // read
-async function getCourses() {
+async function getCourses({page = 0, limit = 10}) {
   const courses = await Course
     .find({ author: 'Mosh', isPublished: true }) // match da query
+    .skip(page * limit)
     .limit(10) // limite de resultados
     .sort({ name: 1 }) // ordena por ordem crescente de nome
     .select({ name: 1, tags: 1 }); // seleciona apenas os atributos especificos
@@ -84,5 +113,6 @@ async function removeCourse(id) {
   return course;
 }
 
-removeCourse("5b9675fc439f48f08ae15186").then(result => console.log(result));
-
+createCourse("5b9675fc439f48f08ae15186")
+  .then(result => console.log(result))
+  .catch(err => console.error(err.message));
