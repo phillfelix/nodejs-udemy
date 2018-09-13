@@ -1,0 +1,3 @@
+{
+  "port": "VIDLY_PORT" // Configurado com 'export VIDLY_PORT=xxxx'
+}
