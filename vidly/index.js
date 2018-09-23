@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const mongoose = require('mongoose');
 const debug = require('debug')('app:startup');
 const genres = require('./routes/genres');
+const customers = require('./routes/customers');
 const home = require('./routes/home');
 const auth = require('./middleware/auth');
 const logger = require('./middleware/logger');
@@ -12,9 +13,10 @@ const app = express();
 debug(`Application: ${config.get('name')}`);
 debug(`Mail host: ${config.get('mail.host')}`);
 
-mongoose.connect('mongodb://localhost/mongo-exercises', { useNewUrlParser: true })
+mongoose.connect('mongodb://localhost/vidly', { useNewUrlParser: true })
   .then(() => debug('Connected to database'))
   .catch(err => debug('Could not connect to database:', err));
+mongoose.set('useFindAndModify', false);
 
 app.set('view engine', 'pug');
 app.set('views', './views'); // default
@@ -34,6 +36,7 @@ app.use(auth);
 // custom router
 app.use('/', home);
 app.use('/api/genres', genres);
+app.use('/api/customers', customers);
 
 const port = config.get('port'); // get port from environment
 app.listen(port, () => debug(`'${config.get('name')}' listening on port ${port}`));
