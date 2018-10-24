@@ -3,9 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const debug = require('debug')('app:startup');
-const genres = require('./routes/genres');
-const customers = require('./routes/customers');
-const home = require('./routes/home');
+const routes = require('./routes');
 const auth = require('./middleware/auth');
 const logger = require('./middleware/logger');
 const app = express();
@@ -34,9 +32,7 @@ app.use(logger());
 app.use(auth);
 
 // custom router
-app.use('/', home);
-app.use('/api/genres', genres);
-app.use('/api/customers', customers);
+app.use('/', routes);
 
 const port = config.get('port'); // get port from environment
 app.listen(port, () => debug(`'${config.get('name')}' listening on port ${port}`));
